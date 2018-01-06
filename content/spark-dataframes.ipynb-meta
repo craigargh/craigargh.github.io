@@ -1,0 +1,8 @@
+Title: Introduction to Spark
+Slug: intro-to-spark
+Date: 2018-01-06
+Category: posts
+Tags: python, spark, data, pyspark, dataframes
+author: Craig
+Summary: An overvie of the Spark framework and some examples of Spark Dataframes
+header_cover: images/headers/spark.gif
