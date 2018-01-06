@@ -43,3 +43,6 @@ THEME = "/home/craig/Documents/workspace/pelican-themes/attila"
 
 STATIC_PATHS = ['images']
 HEADER_COVER = 'images/header.gif'
+
+SOCIAL = (('twitter', 'https://twitter.com/craigargh'),
+          ('github', 'https://github.com/craigargh'),)
