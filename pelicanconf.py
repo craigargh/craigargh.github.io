@@ -41,8 +41,10 @@ IGNORE_FILES = ['.ipynb_checkpoints']
 
 THEME = "/home/craig/Documents/workspace/pelican-themes/attila"
 
-STATIC_PATHS = ['images']
+STATIC_PATHS = ['images', 'static']
 HEADER_COVER = 'images/headers/header.gif'
 
 SOCIAL = (('twitter', 'https://twitter.com/craigargh'),
           ('github', 'https://github.com/craigargh'),)
+
+CSS_OVERRIDE = ['static/style.css']

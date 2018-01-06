@@ -23,6 +23,8 @@
   <!-- Code highlight color scheme -->
       <link href="/theme/css/code_blocks/github.css" rel="stylesheet">
 
+    <!-- CSS specified by the user -->
+    <link href="/static/style.css" type="text/css" rel="stylesheet" />
 
   <!-- Custom fonts -->
   <link href='https://fonts.googleapis.com/css?family=Montserrat:400,300' rel='stylesheet' type='text/css' />
@@ -1128,6 +1130,7 @@ h6:hover .anchor-link {
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Spark">Spark<a class="anchor-link" href="#Spark">¶</a></h2><p>Spark is an open-source framework used for processing large amounts of data quickly and reliably.</p>
+<p>The Spark engine is written in Scala. To interface with the Spark engine there are several supported APIs in different languages, including Java, Scale, Python and R. For this tutorial we'll be using the Python Spark API, known as PySpark.</p>
 <h2 id="Processing-Data">Processing Data<a class="anchor-link" href="#Processing-Data">¶</a></h2><p>Before we go into the details of Spark, let's take a look at some of the issues that it solves.</p>
 <p>When processing data a number of transformations are often applied in order to get it into a form that is useful. This can include transformations like filtering, grouping and mapping.</p>
 <p>For example take a dashboard that displays sales information for the past week. Each sale is stored as a single record in a database table. It will include the date, cost, shipping and customer for each record. By transforming the data, records can be grouped by date, with the sum of sales calculated for each date.</p>
@@ -1148,10 +1151,628 @@ h6:hover .anchor-link {
 <p>By chunking and distributing data in this way, Spark is able to process large datasets very quickly. It also means that it can scale up as the data gets larger by adding more computers to the cluster.</p>
 <p>In addition to chunking and distributing data, Spark also does one other thing to the data in an RDD: it duplicates it. Before distributing the data across the cluster, Spark duplicates each chunk. The reason it does this is to protect against computers in the cluster failing. If a computer crashes while it is processing a chunk of data, it doesn't matter, the same chunk of data can be sent to be processed by another healthy computer in the cluster.</p>
 <p>By duplicating data with RDDs, the system is much more resilient to failures.</p>
-<h2 id="Python-Spark-Dataframes">Python Spark Dataframes<a class="anchor-link" href="#Python-Spark-Dataframes">¶</a></h2><p>Dataframes are structured like a spreadsheet (rows and columns)</p>
-<p>Dataframes are RDDs under the hood, but Spark manages this complexity</p>
-<p>Setting up PySpark</p>
-<h3 id="Example">Example<a class="anchor-link" href="#Example">¶</a></h3><p>An example</p>
+<h3 id="Dataframes">Dataframes<a class="anchor-link" href="#Dataframes">¶</a></h3><p>Now that we know the concepts behind processing data with Spark's RDDs, lets look at how to use them.</p>
+<p>Spark uses Dataframes to represent data. Dataframes are structured like a spreadsheet: they have a rows for data items and columns for each attribute of the data. Transformations can be applied to data directly from the dataframe using a verity of methods including filtering, grouping, agrregation and mapping.</p>
+<p>Dataframes use RDD features under the hood. This means that the transformations applied to dataframes can be done across a cluster of computers, taking advantage of the speed and reslience of RDDs. Spark manages all of this complexity, allowing the programmer to define how they want the data to be processed, without worrying about distributing the data across a cluster of computers.</p>
+<p>As well as running Spark on a cluster, we're able to run Spark on a single computer without any differences to the code. This means that you can develop your Spark code locally before you run it on a cluster in production.</p>
+<p>Let's take a look using Dataframes in PySpark.</p>
+<h2 id="PySpark">PySpark<a class="anchor-link" href="#PySpark">¶</a></h2><p>For this example I'll be using some fake sales data stored in a csv. I've made <a href="/static/sales_data.csv">the data available to download</a> if you want to follow along with the example.</p>
+<p>To get started with Spark's Python API you need to install PySpark:</p>
+<pre><code>pip install pyspark</code></pre>
+<p>Once <code>pyspark</code> is successfully installed we can start using Spark.</p>
+<p>First we need to import pyspark and set up a spark session:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [1]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="k">import</span> <span class="n">SparkSession</span>
+
+<span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s1">'sales'</span><span class="p">)</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This will start a new Spark app, or get an existing one if it already exists. I've named my Spark app <code>sales</code> in this case.</p>
+<p>Now that I've started the session I can create a dataframe with my sales data:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [2]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sales_data</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s1">'static/sales_data.csv'</span><span class="p">,</span> <span class="n">inferSchema</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Spark comes with several methods to read common file types. Here I've used the <code>csv()</code> read method. There are also methods for json and text files, among many others.</p>
+<p>The <code>inferSchema=True</code> argument means that Spark will automatically infer the data types for each column when the data is loaded. The <code>header=True</code> argument tells spark that the first row of the data contains the headers for each column.</p>
+<p>Now that I've loaded the data into a dataframe, lets see what it looks like using the <code>show()</code> method:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [3]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sales_data</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>+-------------------+----------+-----+-------------+
+|               date|total_cost|items|     location|
++-------------------+----------+-----+-------------+
+|2018-01-01 00:00:00|     15.71|    2|United States|
+|2018-01-06 00:00:00|    148.13|    5|United States|
+|2018-01-06 00:00:00|     54.28|    5|        China|
+|2018-01-03 00:00:00|     92.39|    2|United States|
+|2018-01-01 00:00:00|     16.73|    6|        China|
+|2018-01-02 00:00:00|    172.91|    1|        China|
+|2018-01-05 00:00:00|     69.54|    3|        China|
+|2018-01-02 00:00:00|      21.7|    6|        China|
+|2018-01-05 00:00:00|      7.39|    9|United States|
+|2018-01-04 00:00:00|     30.05|    7|        China|
+|2018-01-03 00:00:00|    179.31|    4|        China|
+|2018-01-01 00:00:00|    127.89|    9|        China|
+|2018-01-04 00:00:00|     43.24|    8|        China|
+|2018-01-04 00:00:00|     25.76|    8|        China|
+|2018-01-01 00:00:00|     166.0|    1|        China|
+|2018-01-04 00:00:00|     67.51|    6|        China|
+|2018-01-06 00:00:00|    114.48|    7|        China|
+|2018-01-02 00:00:00|    118.46|   12|        China|
+|2018-01-04 00:00:00|    134.64|   11|        China|
+|2018-01-02 00:00:00|    191.28|   12|        China|
++-------------------+----------+-----+-------------+
+only showing top 20 rows
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can also view the schema for the table to check the data types that Spark has inferred for each column, using the <code>printSchema()</code> method:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [4]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sales_data</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>root
+ |-- date: timestamp (nullable = true)
+ |-- total_cost: double (nullable = true)
+ |-- items: integer (nullable = true)
+ |-- location: string (nullable = true)
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's run through some common transformations on the sales data.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Filtering">Filtering<a class="anchor-link" href="#Filtering">¶</a></h3><p>Filtering can be used to quickly return a subset of the data set. Here I am using the <code>filter()</code> method to retrieve all of the orders in the United States:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [5]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sales_data</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sales_data</span><span class="p">[</span><span class="s1">'location'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'United States'</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>+-------------------+----------+-----+-------------+
+|               date|total_cost|items|     location|
++-------------------+----------+-----+-------------+
+|2018-01-01 00:00:00|     15.71|    2|United States|
+|2018-01-06 00:00:00|    148.13|    5|United States|
+|2018-01-03 00:00:00|     92.39|    2|United States|
+|2018-01-05 00:00:00|      7.39|    9|United States|
+|2018-01-06 00:00:00|     89.58|    7|United States|
+|2018-01-02 00:00:00|      5.77|   11|United States|
+|2018-01-05 00:00:00|     21.07|   12|United States|
+|2018-01-04 00:00:00|     133.0|   11|United States|
+|2018-01-05 00:00:00|    146.06|    4|United States|
+|2018-01-02 00:00:00|    148.67|    8|United States|
+|2018-01-02 00:00:00|     77.03|    3|United States|
+|2018-01-03 00:00:00|     91.92|    6|United States|
+|2018-01-02 00:00:00|     24.94|   11|United States|
+|2018-01-01 00:00:00|     27.97|    9|United States|
+|2018-01-01 00:00:00|     81.52|   12|United States|
+|2018-01-05 00:00:00|    157.59|    8|United States|
+|2018-01-06 00:00:00|    173.81|    8|United States|
+|2018-01-01 00:00:00|     42.73|    2|United States|
+|2018-01-05 00:00:00|     70.55|    1|United States|
+|2018-01-03 00:00:00|     19.41|   12|United States|
++-------------------+----------+-----+-------------+
+only showing top 20 rows
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Spark uses a special syntax in this case to define which column I want to use when filtering <code>sales_data['location']</code>. It is similar to accessing a value of a dictionary. Unlike a dictionary which returns a single value, it returns a column that Spark will use when checking which rows match the filter condition. In this case the condition checks the location is equal to <code>'United States'</code>.</p>
+<p>Each transformation method of a <code>Dataframe</code> returns a new <code>Dataframe</code>. I can store the result of a transformation in a variable if I want to reuse the result. Here I want to work out the number of large orders (more than 10 items):</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [6]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">large_orders</span> <span class="o">=</span> <span class="n">sales_data</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sales_data</span><span class="p">[</span><span class="s1">'items'</span><span class="p">]</span> <span class="o">></span> <span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Since I stored the result of the filter transformation in a variable I can reuse it. First let's see the number of orders:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [7]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">large_orders</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt output_prompt">Out[7]:</div>
+<div class="output_text output_subarea output_execute_result">
+<pre>181</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now let's look at first item in the data:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [8]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">first_order</span> <span class="o">=</span> <span class="n">large_orders</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+<span class="n">first_order</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt output_prompt">Out[8]:</div>
+<div class="output_text output_subarea output_execute_result">
+<pre>Row(date=datetime.datetime(2018, 1, 2, 0, 0), total_cost=118.46, items=12, location='China')</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This returns a <code>Row</code> object, which behaves like a Python object and a Python dictionary:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [9]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">first_order</span><span class="p">[</span><span class="s1">'items'</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt output_prompt">Out[9]:</div>
+<div class="output_text output_subarea output_execute_result">
+<pre>12</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [10]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">first_order</span><span class="o">.</span><span class="n">items</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt output_prompt">Out[10]:</div>
+<div class="output_text output_subarea output_execute_result">
+<pre>12</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Aggregations-and-Calculations">Aggregations and Calculations<a class="anchor-link" href="#Aggregations-and-Calculations">¶</a></h3><p>Quite often when processing data you will want to calculate a value from existing columns. You probably also want to aggregate several rows together into a single value, like a sum or an average.</p>
+<p>Spark provides these featues in variety of different ways.</p>
+<p>First let's look at using the <code>select()</code> method to compute values. In this case I want to see which countries customers have placed orders from:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [11]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sales_data</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">'location'</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">distinct</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>+--------------+
+|      location|
++--------------+
+| United States|
+|         China|
+|United Kingdom|
++--------------+
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To start I tell Spark which columns I want to include using the <code>select()</code> method. Then I use the <code>distinct()</code> method to remove duplicate values from the result.</p>
+<p>Next I want to see the total sales for the data:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [12]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="k">import</span> <span class="nb">sum</span>
+
+<span class="n">sales_data</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="s1">'total_cost'</span><span class="p">))</span> \
+    <span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>+-----------------+
+|  sum(total_cost)|
++-----------------+
+|99741.57000000005|
++-----------------+
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>I give the column name that I want to total 0f to the <code>sum()</code> method. This is called from inside of the <code>select()</code> method to return only the calculated value.</p>
+<p>I can also see the average sales for the data using the <code>avg()</code> method:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [13]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="k">import</span> <span class="n">avg</span>
+
+<span class="n">sales_data</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">avg</span><span class="p">(</span><span class="s1">'total_cost'</span><span class="p">))</span> \
+    <span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>+-----------------+
+|  avg(total_cost)|
++-----------------+
+|99.74157000000005|
++-----------------+
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Sometimes I will want to calculate new columns from existing columns. For example I might want to calculate the average iten cost by dividing total order cost by the number of items:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [14]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sales_data</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s1">'average item cost'</span><span class="p">,</span> <span class="n">sales_data</span><span class="p">[</span><span class="s1">'total_cost'</span><span class="p">]</span> <span class="o">/</span> <span class="n">sales_data</span><span class="p">[</span><span class="s1">'items'</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">'date'</span><span class="p">,</span> <span class="s1">'location'</span><span class="p">,</span> <span class="s1">'Average item cost'</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>+-------------------+-------------+------------------+
+|               date|     location| Average item cost|
++-------------------+-------------+------------------+
+|2018-01-01 00:00:00|United States|             7.855|
+|2018-01-06 00:00:00|United States|29.625999999999998|
+|2018-01-06 00:00:00|        China|            10.856|
+|2018-01-03 00:00:00|United States|            46.195|
+|2018-01-01 00:00:00|        China|2.7883333333333336|
+|2018-01-02 00:00:00|        China|            172.91|
+|2018-01-05 00:00:00|        China|23.180000000000003|
+|2018-01-02 00:00:00|        China|3.6166666666666667|
+|2018-01-05 00:00:00|United States|0.8211111111111111|
+|2018-01-04 00:00:00|        China| 4.292857142857143|
+|2018-01-03 00:00:00|        China|           44.8275|
+|2018-01-01 00:00:00|        China|             14.21|
+|2018-01-04 00:00:00|        China|             5.405|
+|2018-01-04 00:00:00|        China|              3.22|
+|2018-01-01 00:00:00|        China|             166.0|
+|2018-01-04 00:00:00|        China|11.251666666666667|
+|2018-01-06 00:00:00|        China|16.354285714285716|
+|2018-01-02 00:00:00|        China| 9.871666666666666|
+|2018-01-04 00:00:00|        China|12.239999999999998|
+|2018-01-02 00:00:00|        China|             15.94|
++-------------------+-------------+------------------+
+only showing top 20 rows
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To do these kinds of calculations I need to use the dictionary-like <code>DataFrame</code> syntax. In this case I've divided the value of the <code>total_cost</code> column by the value of the <code>items</code> column. Using the <code>withColumn()</code> method I store the result of this calculation in a new column called <code>average item cost</code>.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Grouping">Grouping<a class="anchor-link" href="#Grouping">¶</a></h3><p>Finally, let's look at grouping data. Using the <code>groupBy()</code> method I can consolidate data into related groups. After I have grouped the data I can perform aggregations and other transormations on the data.</p>
+<p>In this example I want to see the total sales. I use the <code>groupBy()</code> method to group the data into countries:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [15]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="k">import</span> <span class="n">format_number</span>
+
+<span class="n">country_sales</span> <span class="o">=</span> <span class="n">sales_data</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="n">sales_data</span><span class="p">[</span><span class="s1">'location'</span><span class="p">])</span>
+
+<span class="n">country_sales</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">'location'</span><span class="p">,</span> <span class="n">format_number</span><span class="p">(</span><span class="s1">'sum(total_cost)'</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="s1">'sum(items)'</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">withColumnRenamed</span><span class="p">(</span><span class="s1">'format_number(sum(total_cost), 2)'</span><span class="p">,</span> <span class="s1">'total sales'</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>+--------------+-----------+----------+
+|      location|total sales|sum(items)|
++--------------+-----------+----------+
+| United States|  10,667.63|       715|
+|         China|  88,249.00|      5788|
+|United Kingdom|     824.94|        30|
++--------------+-----------+----------+
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>After I have grouped the data by country, I calculate the sum of all the columns using the <code>sum()</code> method. I then select only the columns I want to display. The <code>format_number()</code> method is used to make sure the total sales are only displayed to two decimal places.</p>
+<p>Applying transformations to columns gives them long and cumbersome names. I use the <code>withColumnRenamed()</code> method to make rename the calculated total cost column to <code>total sales</code>. If I didn't do this it would be called <code>format_number(sum(total_cost), 2)</code> in the output.</p>
+<p>In this final example I want to group sales by the day of the week:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [16]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="k">import</span> <span class="n">date_format</span>
+
+<span class="n">date_sales</span> <span class="o">=</span> <span class="n">sales_data</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="n">sales_data</span><span class="p">[</span><span class="s1">'date'</span><span class="p">])</span>
+
+<span class="n">date_sales</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">date_format</span><span class="p">(</span><span class="s1">'date'</span><span class="p">,</span> <span class="s1">'EEEE'</span><span class="p">),</span> <span class="n">format_number</span><span class="p">(</span><span class="s1">'sum(total_cost)'</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="s1">'sum(items)'</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">withColumnRenamed</span><span class="p">(</span><span class="s1">'date_format(date, EEEE)'</span><span class="p">,</span> <span class="s1">'day'</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">withColumnRenamed</span><span class="p">(</span><span class="s1">'format_number(sum(total_cost), 2)'</span><span class="p">,</span> <span class="s1">'total sales'</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>+---------+-----------+----------+
+|      day|total sales|sum(items)|
++---------+-----------+----------+
+|  Tuesday|  14,403.24|       993|
+|   Monday|  14,373.44|       986|
+|   Friday|  17,466.03|      1035|
+|Wednesday|  17,747.28|      1162|
+| Saturday|  18,653.82|      1190|
+| Thursday|  17,097.76|      1167|
++---------+-----------+----------+
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The only new thing in this example is the use of the <code>date_format</code> function. I use it to transform the date into a human readable day of the week.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Summary">Summary<a class="anchor-link" href="#Summary">¶</a></h1>
 </div>
 </div>
 </div>

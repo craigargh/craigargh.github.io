@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css?family=Fira+Mono');
+
+h1, h2, h3 {
+    margin-top: 1.5em !important;
+}
+
+.inner_cell p {
+    margin: 1em auto !important;
+}
+
+
+
+.input_area {
+    font-family: 'Fira Mono', monospace !important;
+    font-size: 0.75em !important;
+}
+
+.output_text {
+    font-size: 0.75em !important;
+}
+
+.inner {
+    max-width: 40em !important;
+}
