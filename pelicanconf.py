@@ -40,3 +40,6 @@ PLUGINS = ['ipynb.markup']
 IGNORE_FILES = ['.ipynb_checkpoints']
 
 THEME = "/home/craig/Documents/workspace/pelican-themes/attila"
+
+STATIC_PATHS = ['images']
+HEADER_COVER = 'images/header.gif'
