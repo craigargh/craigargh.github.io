@@ -1191,7 +1191,8 @@ h6:hover .anchor-link {
 <div class="prompt input_prompt">In [2]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sales_data</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s1">'static/sales_data.csv'</span><span class="p">,</span> <span class="n">inferSchema</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sales_data</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s1">'static/sales_data.csv'</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                            <span class="n">inferSchema</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1487,7 +1488,7 @@ only showing top 20 rows
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Aggregations-and-Calculations">Aggregations and Calculations<a class="anchor-link" href="#Aggregations-and-Calculations">¶</a></h3><p>Quite often when processing data you will want to calculate a value from existing columns. You probably also want to aggregate several rows together into a single value, like a sum or an average.</p>
 <p>Spark provides these featues in variety of different ways.</p>
-<p>First let's look at using the <code>select()</code> method to compute values. In this case I want to see which countries customers have placed orders from:</p>
+<p>First let's look at using the <code>select()</code> method. In this case I want to see which countries customers have placed orders from:</p>
 </div>
 </div>
 </div>
@@ -1613,7 +1614,8 @@ only showing top 20 rows
 <div class="prompt input_prompt">In [14]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sales_data</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s1">'average item cost'</span><span class="p">,</span> <span class="n">sales_data</span><span class="p">[</span><span class="s1">'total_cost'</span><span class="p">]</span> <span class="o">/</span> <span class="n">sales_data</span><span class="p">[</span><span class="s1">'items'</span><span class="p">])</span> \
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sales_data</span> \
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s1">'average item cost'</span><span class="p">,</span> <span class="n">sales_data</span><span class="p">[</span><span class="s1">'total_cost'</span><span class="p">]</span> <span class="o">/</span> <span class="n">sales_data</span><span class="p">[</span><span class="s1">'items'</span><span class="p">])</span> \
     <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">'date'</span><span class="p">,</span> <span class="s1">'location'</span><span class="p">,</span> <span class="s1">'Average item cost'</span><span class="p">)</span> \
     <span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
