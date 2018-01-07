@@ -8,15 +8,12 @@ h1, h2, h3 {
     margin: 1em auto !important;
 }
 
-
-
-.input_area {
-    font-family: 'Fira Mono Regular', monospace !important;
+.highlight, .output_text {
     font-size: 0.75em !important;
 }
 
-.output_text {
-    font-size: 0.75em !important;
+pre {
+    overflow-x: visible !important;
 }
 
 .inner {

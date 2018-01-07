@@ -1131,7 +1131,7 @@ h6:hover .anchor-link {
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Spark">Spark<a class="anchor-link" href="#Spark">¶</a></h2><p>Spark is an open-source framework used for processing large amounts of data quickly and reliably.</p>
 <p>The Spark engine is written in Scala. To interface with the Spark engine there are several supported APIs in different languages, including Java, Scale, Python and R. For this tutorial we'll be using the Python Spark API, known as PySpark.</p>
-<h2 id="Processing-Data">Processing Data<a class="anchor-link" href="#Processing-Data">¶</a></h2><p>Before we go into the details of Spark, let's take a look at some of the issues that it solves.</p>
+<h2 id="Processing-Data">Processing Data<a class="anchor-link" href="#Processing-Data">¶</a></h2><p>Before we go into the details of using Spark's Python API, let's take a step back and look at some of the issues that it was designed to solve.</p>
 <p>When processing data a number of transformations are often applied in order to get it into a form that is useful. This can include transformations like filtering, grouping and mapping.</p>
 <p>For example take a dashboard that displays sales information for the past week. Each sale is stored as a single record in a database table. It will include the date, cost, shipping and customer for each record. By transforming the data, records can be grouped by date, with the sum of sales calculated for each date.</p>
 <p>In a system where only one computer is used processing this data might look like this:</p>
@@ -1158,7 +1158,8 @@ h6:hover .anchor-link {
 <p>Let's take a look using Dataframes in PySpark.</p>
 <h2 id="PySpark">PySpark<a class="anchor-link" href="#PySpark">¶</a></h2><p>For this example I'll be using some fake sales data stored in a csv. I've made <a href="/static/sales_data.csv">the data available to download</a> if you want to follow along with the example.</p>
 <p>To get started with Spark's Python API you need to install PySpark:</p>
-<pre><code>pip install pyspark</code></pre>
+<div class="highlight"><pre><span></span>pip install pyspark
+</pre></div>
 <p>Once <code>pyspark</code> is successfully installed we can start using Spark.</p>
 <p>First we need to import pyspark and set up a spark session:</p>
 </div>
@@ -1171,7 +1172,7 @@ h6:hover .anchor-link {
 <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="k">import</span> <span class="n">SparkSession</span>
 
-<span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s1">'sales'</span><span class="p">)</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s1">'pokemon'</span><span class="p">)</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1191,8 +1192,7 @@ h6:hover .anchor-link {
 <div class="prompt input_prompt">In [2]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sales_data</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s1">'static/sales_data.csv'</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                            <span class="n">inferSchema</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pokemon</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">json</span><span class="p">(</span><span class="s1">'static/spark-intro/pokemon.json'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1213,7 +1213,7 @@ h6:hover .anchor-link {
 <div class="prompt input_prompt">In [3]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sales_data</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pokemon</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1223,33 +1223,54 @@ h6:hover .anchor-link {
 <div class="output_area">
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>+-------------------+----------+-----+-------------+
-|               date|total_cost|items|     location|
-+-------------------+----------+-----+-------------+
-|2018-01-01 00:00:00|     15.71|    2|United States|
-|2018-01-06 00:00:00|    148.13|    5|United States|
-|2018-01-06 00:00:00|     54.28|    5|        China|
-|2018-01-03 00:00:00|     92.39|    2|United States|
-|2018-01-01 00:00:00|     16.73|    6|        China|
-|2018-01-02 00:00:00|    172.91|    1|        China|
-|2018-01-05 00:00:00|     69.54|    3|        China|
-|2018-01-02 00:00:00|      21.7|    6|        China|
-|2018-01-05 00:00:00|      7.39|    9|United States|
-|2018-01-04 00:00:00|     30.05|    7|        China|
-|2018-01-03 00:00:00|    179.31|    4|        China|
-|2018-01-01 00:00:00|    127.89|    9|        China|
-|2018-01-04 00:00:00|     43.24|    8|        China|
-|2018-01-04 00:00:00|     25.76|    8|        China|
-|2018-01-01 00:00:00|     166.0|    1|        China|
-|2018-01-04 00:00:00|     67.51|    6|        China|
-|2018-01-06 00:00:00|    114.48|    7|        China|
-|2018-01-02 00:00:00|    118.46|   12|        China|
-|2018-01-04 00:00:00|    134.64|   11|        China|
-|2018-01-02 00:00:00|    191.28|   12|        China|
-+-------------------+----------+-----+-------------+
+<pre>+------+-------+------+---+----------+-----+--------------+---------------+-----+------+------+------+
+|attack|defense|height| hp|      name|order|special-attack|special-defense|speed|type_1|type_2|weight|
++------+-------+------+---+----------+-----+--------------+---------------+-----+------+------+------+
+|    49|     49|     7| 45| bulbasaur|    1|            65|             65|   45| grass|poison|    69|
+|    62|     63|    10| 60|   ivysaur|    2|            80|             80|   60| grass|poison|   130|
+|    82|     83|    20| 80|  venusaur|    3|           100|            100|   80| grass|poison|  1000|
+|    52|     43|     6| 39|charmander|    5|            60|             50|   65|  fire|  null|    85|
+|    64|     58|    11| 58|charmeleon|    6|            80|             65|   80|  fire|  null|   190|
+|    84|     78|    17| 78| charizard|    7|           109|             85|  100|  fire|flying|   905|
+|    48|     65|     5| 44|  squirtle|   10|            50|             64|   43| water|  null|    90|
+|    63|     80|    10| 59| wartortle|   11|            65|             80|   58| water|  null|   225|
+|    83|    100|    16| 79| blastoise|   12|            85|            105|   78| water|  null|   855|
+|    30|     35|     3| 45|  caterpie|   14|            20|             20|   45|   bug|  null|    29|
+|    20|     55|     7| 50|   metapod|   15|            25|             25|   30|   bug|  null|    99|
+|    45|     50|    11| 60|butterfree|   16|            90|             80|   70|   bug|flying|   320|
+|    35|     30|     3| 40|    weedle|   17|            20|             20|   50|   bug|poison|    32|
+|    25|     50|     6| 45|    kakuna|   18|            25|             25|   35|   bug|poison|   100|
+|    90|     40|    10| 65|  beedrill|   19|            45|             80|   75|   bug|poison|   295|
+|    45|     40|     3| 40|    pidgey|   21|            35|             35|   56|normal|flying|    18|
+|    60|     55|    11| 63| pidgeotto|   22|            50|             50|   71|normal|flying|   300|
+|    80|     75|    15| 83|   pidgeot|   23|            70|             70|  101|normal|flying|   395|
+|    56|     35|     3| 30|   rattata|   25|            25|             35|   72|normal|  null|    35|
+|    81|     60|     7| 55|  raticate|   27|            50|             70|   97|normal|  null|   185|
++------+-------+------+---+----------+-----+--------------+---------------+-----+------+------+------+
 only showing top 20 rows
 
 </pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [4]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pokemon</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt output_prompt">Out[4]:</div>
+<div class="output_text output_subarea output_execute_result">
+<pre>949</pre>
 </div>
 </div>
 </div>
@@ -1265,10 +1286,10 @@ only showing top 20 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [4]:</div>
+<div class="prompt input_prompt">In [5]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sales_data</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pokemon</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1279,10 +1300,73 @@ only showing top 20 rows
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>root
- |-- date: timestamp (nullable = true)
- |-- total_cost: double (nullable = true)
- |-- items: integer (nullable = true)
- |-- location: string (nullable = true)
+ |-- attack: long (nullable = true)
+ |-- defense: long (nullable = true)
+ |-- height: long (nullable = true)
+ |-- hp: long (nullable = true)
+ |-- name: string (nullable = true)
+ |-- order: long (nullable = true)
+ |-- special-attack: long (nullable = true)
+ |-- special-defense: long (nullable = true)
+ |-- speed: long (nullable = true)
+ |-- type_1: string (nullable = true)
+ |-- type_2: string (nullable = true)
+ |-- weight: long (nullable = true)
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Using the <code>.select()</code> method I can define which columns I want:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [6]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pokemon</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">'name'</span><span class="p">,</span> <span class="s1">'type_1'</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>+----------+------+
+|      name|type_1|
++----------+------+
+| bulbasaur| grass|
+|   ivysaur| grass|
+|  venusaur| grass|
+|charmander|  fire|
+|charmeleon|  fire|
+| charizard|  fire|
+|  squirtle| water|
+| wartortle| water|
+| blastoise| water|
+|  caterpie|   bug|
+|   metapod|   bug|
+|butterfree|   bug|
+|    weedle|   bug|
+|    kakuna|   bug|
+|  beedrill|   bug|
+|    pidgey|normal|
+| pidgeotto|normal|
+|   pidgeot|normal|
+|   rattata|normal|
+|  raticate|normal|
++----------+------+
+only showing top 20 rows
 
 </pre>
 </div>
@@ -1308,10 +1392,12 @@ only showing top 20 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [5]:</div>
+<div class="prompt input_prompt">In [7]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sales_data</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sales_data</span><span class="p">[</span><span class="s1">'location'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'United States'</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pokemon</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pokemon</span><span class="o">.</span><span class="n">type_1</span> <span class="o">==</span> <span class="s1">'dragon'</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">'name'</span><span class="p">,</span> <span class="s1">'type_1'</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1321,30 +1407,80 @@ only showing top 20 rows
 <div class="output_area">
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>+-------------------+----------+-----+-------------+
-|               date|total_cost|items|     location|
-+-------------------+----------+-----+-------------+
-|2018-01-01 00:00:00|     15.71|    2|United States|
-|2018-01-06 00:00:00|    148.13|    5|United States|
-|2018-01-03 00:00:00|     92.39|    2|United States|
-|2018-01-05 00:00:00|      7.39|    9|United States|
-|2018-01-06 00:00:00|     89.58|    7|United States|
-|2018-01-02 00:00:00|      5.77|   11|United States|
-|2018-01-05 00:00:00|     21.07|   12|United States|
-|2018-01-04 00:00:00|     133.0|   11|United States|
-|2018-01-05 00:00:00|    146.06|    4|United States|
-|2018-01-02 00:00:00|    148.67|    8|United States|
-|2018-01-02 00:00:00|     77.03|    3|United States|
-|2018-01-03 00:00:00|     91.92|    6|United States|
-|2018-01-02 00:00:00|     24.94|   11|United States|
-|2018-01-01 00:00:00|     27.97|    9|United States|
-|2018-01-01 00:00:00|     81.52|   12|United States|
-|2018-01-05 00:00:00|    157.59|    8|United States|
-|2018-01-06 00:00:00|    173.81|    8|United States|
-|2018-01-01 00:00:00|     42.73|    2|United States|
-|2018-01-05 00:00:00|     70.55|    1|United States|
-|2018-01-03 00:00:00|     19.41|   12|United States|
-+-------------------+----------+-----+-------------+
+<pre>+---------+------+
+|     name|type_1|
++---------+------+
+|  dratini|dragon|
+|dragonair|dragon|
+|dragonite|dragon|
+|  altaria|dragon|
+|    bagon|dragon|
+|  shelgon|dragon|
+|salamence|dragon|
+|   latias|dragon|
+|   latios|dragon|
+| rayquaza|dragon|
+|    gible|dragon|
+|   gabite|dragon|
+| garchomp|dragon|
+|     axew|dragon|
+|  fraxure|dragon|
+|  haxorus|dragon|
+|druddigon|dragon|
+| reshiram|dragon|
+|   zekrom|dragon|
+|   kyurem|dragon|
++---------+------+
+only showing top 20 rows
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [8]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pokemon</span> \
+    <span class="o">.</span><span class="n">filter</span><span class="p">((</span><span class="n">pokemon</span><span class="o">.</span><span class="n">type_1</span> <span class="o">==</span> <span class="s1">'dragon'</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">pokemon</span><span class="o">.</span><span class="n">type_2</span> <span class="o">==</span> <span class="s1">'dragon'</span><span class="p">))</span> \
+    <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">'name'</span><span class="p">,</span> <span class="s1">'type_1'</span><span class="p">,</span> <span class="s1">'type_2'</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>+----------------+------+-------+
+|            name|type_1| type_2|
++----------------+------+-------+
+|         dratini|dragon|   null|
+|       dragonair|dragon|   null|
+|       dragonite|dragon| flying|
+|         kingdra| water| dragon|
+|         vibrava|ground| dragon|
+|          flygon|ground| dragon|
+|         altaria|dragon| flying|
+|           bagon|dragon|   null|
+|         shelgon|dragon|   null|
+|       salamence|dragon| flying|
+|          latias|dragon|psychic|
+|          latios|dragon|psychic|
+|        rayquaza|dragon| flying|
+|           gible|dragon| ground|
+|          gabite|dragon| ground|
+|        garchomp|dragon| ground|
+|          dialga| steel| dragon|
+|          palkia| water| dragon|
+|giratina-altered| ghost| dragon|
+|            axew|dragon|   null|
++----------------+------+-------+
 only showing top 20 rows
 
 </pre>
@@ -1364,10 +1500,10 @@ only showing top 20 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [6]:</div>
+<div class="prompt input_prompt">In [9]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">large_orders</span> <span class="o">=</span> <span class="n">sales_data</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">sales_data</span><span class="p">[</span><span class="s1">'items'</span><span class="p">]</span> <span class="o">></span> <span class="mi">10</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tall_pokemon</span> <span class="o">=</span> <span class="n">pokemon</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pokemon</span><span class="o">.</span><span class="n">height</span> <span class="o">></span> <span class="mi">20</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1383,10 +1519,10 @@ only showing top 20 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [7]:</div>
+<div class="prompt input_prompt">In [10]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">large_orders</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tall_pokemon</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1394,9 +1530,9 @@ only showing top 20 rows
 <div class="output_wrapper">
 <div class="output">
 <div class="output_area">
-<div class="prompt output_prompt">Out[7]:</div>
+<div class="prompt output_prompt">Out[10]:</div>
 <div class="output_text output_subarea output_execute_result">
-<pre>181</pre>
+<pre>90</pre>
 </div>
 </div>
 </div>
@@ -1412,11 +1548,14 @@ only showing top 20 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [8]:</div>
+<div class="prompt input_prompt">In [11]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">first_order</span> <span class="o">=</span> <span class="n">large_orders</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
-<span class="n">first_order</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tallest_pokemon</span> <span class="o">=</span> <span class="n">tall_pokemon</span> \
+    <span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">pokemon</span><span class="o">.</span><span class="n">height</span><span class="o">.</span><span class="n">desc</span><span class="p">())</span> \
+    <span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    
+<span class="n">tallest_pokemon</span>
 </pre></div>
 </div>
 </div>
@@ -1424,9 +1563,9 @@ only showing top 20 rows
 <div class="output_wrapper">
 <div class="output">
 <div class="output_area">
-<div class="prompt output_prompt">Out[8]:</div>
+<div class="prompt output_prompt">Out[11]:</div>
 <div class="output_text output_subarea output_execute_result">
-<pre>Row(date=datetime.datetime(2018, 1, 2, 0, 0), total_cost=118.46, items=12, location='China')</pre>
+<pre>Row(attack=90, defense=45, height=145, hp=170, name='wailord', order=406, special-attack=90, special-defense=45, speed=60, type_1='water', type_2=None, weight=3980)</pre>
 </div>
 </div>
 </div>
@@ -1436,16 +1575,16 @@ only showing top 20 rows
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This returns a <code>Row</code> object, which behaves like a Python object and a Python dictionary:</p>
+<p>Here I've used the <code>.first()</code> method to retrieve the first row in the dataset. This returns a <code>Row</code> object, which behaves like a Python object and a Python dictionary:</p>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [9]:</div>
+<div class="prompt input_prompt">In [12]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">first_order</span><span class="p">[</span><span class="s1">'items'</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tallest_pokemon</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -1453,9 +1592,9 @@ only showing top 20 rows
 <div class="output_wrapper">
 <div class="output">
 <div class="output_area">
-<div class="prompt output_prompt">Out[9]:</div>
+<div class="prompt output_prompt">Out[12]:</div>
 <div class="output_text output_subarea output_execute_result">
-<pre>12</pre>
+<pre>'wailord'</pre>
 </div>
 </div>
 </div>
@@ -1463,10 +1602,10 @@ only showing top 20 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [10]:</div>
+<div class="prompt input_prompt">In [13]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">first_order</span><span class="o">.</span><span class="n">items</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tallest_pokemon</span><span class="o">.</span><span class="n">name</span>
 </pre></div>
 </div>
 </div>
@@ -1474,9 +1613,9 @@ only showing top 20 rows
 <div class="output_wrapper">
 <div class="output">
 <div class="output_area">
-<div class="prompt output_prompt">Out[10]:</div>
+<div class="prompt output_prompt">Out[13]:</div>
 <div class="output_text output_subarea output_execute_result">
-<pre>12</pre>
+<pre>'wailord'</pre>
 </div>
 </div>
 </div>
@@ -1494,10 +1633,10 @@ only showing top 20 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [11]:</div>
+<div class="prompt input_prompt">In [14]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sales_data</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">'location'</span><span class="p">)</span> \
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pokemon</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">'type_1'</span><span class="p">)</span> \
     <span class="o">.</span><span class="n">distinct</span><span class="p">()</span> \
     <span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -1509,13 +1648,28 @@ only showing top 20 rows
 <div class="output_area">
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>+--------------+
-|      location|
-+--------------+
-| United States|
-|         China|
-|United Kingdom|
-+--------------+
+<pre>+--------+
+|  type_1|
++--------+
+|     bug|
+|  normal|
+|   ghost|
+|   grass|
+|   steel|
+|     ice|
+|   water|
+|  ground|
+|  flying|
+|   fairy|
+|    dark|
+|fighting|
+|  dragon|
+|  poison|
+| psychic|
+|    rock|
+|electric|
+|    fire|
++--------+
 
 </pre>
 </div>
@@ -1534,12 +1688,12 @@ only showing top 20 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [12]:</div>
+<div class="prompt input_prompt">In [15]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="k">import</span> <span class="nb">sum</span>
 
-<span class="n">sales_data</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="s1">'total_cost'</span><span class="p">))</span> \
+<span class="n">pokemon</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="s1">'height'</span><span class="p">))</span> \
     <span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -1550,11 +1704,11 @@ only showing top 20 rows
 <div class="output_area">
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>+-----------------+
-|  sum(total_cost)|
-+-----------------+
-|99741.57000000005|
-+-----------------+
+<pre>+-----------+
+|sum(height)|
++-----------+
+|      11656|
++-----------+
 
 </pre>
 </div>
@@ -1573,12 +1727,12 @@ only showing top 20 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [13]:</div>
+<div class="prompt input_prompt">In [16]:</div>
 <div class="inner_cell">
 <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="k">import</span> <span class="n">avg</span>
 
-<span class="n">sales_data</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">avg</span><span class="p">(</span><span class="s1">'total_cost'</span><span class="p">))</span> \
+<span class="n">pokemon</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">avg</span><span class="p">(</span><span class="s1">'hp'</span><span class="p">))</span> \
     <span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -1590,9 +1744,9 @@ only showing top 20 rows
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>+-----------------+
-|  avg(total_cost)|
+|          avg(hp)|
 +-----------------+
-|99.74157000000005|
+|68.95468914646997|
 +-----------------+
 
 </pre>
@@ -1601,22 +1755,14 @@ only showing top 20 rows
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Sometimes I will want to calculate new columns from existing columns. For example I might want to calculate the average iten cost by dividing total order cost by the number of items:</p>
-</div>
-</div>
-</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [14]:</div>
+<div class="prompt input_prompt">In [17]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sales_data</span> \
-    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s1">'average item cost'</span><span class="p">,</span> <span class="n">sales_data</span><span class="p">[</span><span class="s1">'total_cost'</span><span class="p">]</span> <span class="o">/</span> <span class="n">sales_data</span><span class="p">[</span><span class="s1">'items'</span><span class="p">])</span> \
-    <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">'date'</span><span class="p">,</span> <span class="s1">'location'</span><span class="p">,</span> <span class="s1">'Average item cost'</span><span class="p">)</span> \
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="k">import</span> <span class="nb">max</span>
+
+<span class="n">pokemon</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="s1">'hp'</span><span class="p">))</span> \
     <span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -1627,43 +1773,15 @@ only showing top 20 rows
 <div class="output_area">
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>+-------------------+-------------+------------------+
-|               date|     location| Average item cost|
-+-------------------+-------------+------------------+
-|2018-01-01 00:00:00|United States|             7.855|
-|2018-01-06 00:00:00|United States|29.625999999999998|
-|2018-01-06 00:00:00|        China|            10.856|
-|2018-01-03 00:00:00|United States|            46.195|
-|2018-01-01 00:00:00|        China|2.7883333333333336|
-|2018-01-02 00:00:00|        China|            172.91|
-|2018-01-05 00:00:00|        China|23.180000000000003|
-|2018-01-02 00:00:00|        China|3.6166666666666667|
-|2018-01-05 00:00:00|United States|0.8211111111111111|
-|2018-01-04 00:00:00|        China| 4.292857142857143|
-|2018-01-03 00:00:00|        China|           44.8275|
-|2018-01-01 00:00:00|        China|             14.21|
-|2018-01-04 00:00:00|        China|             5.405|
-|2018-01-04 00:00:00|        China|              3.22|
-|2018-01-01 00:00:00|        China|             166.0|
-|2018-01-04 00:00:00|        China|11.251666666666667|
-|2018-01-06 00:00:00|        China|16.354285714285716|
-|2018-01-02 00:00:00|        China| 9.871666666666666|
-|2018-01-04 00:00:00|        China|12.239999999999998|
-|2018-01-02 00:00:00|        China|             15.94|
-+-------------------+-------------+------------------+
-only showing top 20 rows
+<pre>+-------+
+|max(hp)|
++-------+
+|    255|
++-------+
 
 </pre>
 </div>
 </div>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>To do these kinds of calculations I need to use the dictionary-like <code>DataFrame</code> syntax. In this case I've divided the value of the <code>total_cost</code> column by the value of the <code>items</code> column. Using the <code>withColumn()</code> method I store the result of this calculation in a new column called <code>average item cost</code>.</p>
 </div>
 </div>
 </div>
@@ -1678,16 +1796,16 @@ only showing top 20 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [15]:</div>
+<div class="prompt input_prompt">In [18]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="k">import</span> <span class="n">format_number</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="k">import</span> <span class="nb">round</span><span class="p">,</span> <span class="n">desc</span>
 
-<span class="n">country_sales</span> <span class="o">=</span> <span class="n">sales_data</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="n">sales_data</span><span class="p">[</span><span class="s1">'location'</span><span class="p">])</span>
+<span class="n">pokemon_types</span> <span class="o">=</span> <span class="n">pokemon</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="n">pokemon</span><span class="p">[</span><span class="s1">'type_1'</span><span class="p">])</span>
 
-<span class="n">country_sales</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> \
-    <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">'location'</span><span class="p">,</span> <span class="n">format_number</span><span class="p">(</span><span class="s1">'sum(total_cost)'</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="s1">'sum(items)'</span><span class="p">)</span> \
-    <span class="o">.</span><span class="n">withColumnRenamed</span><span class="p">(</span><span class="s1">'format_number(sum(total_cost), 2)'</span><span class="p">,</span> <span class="s1">'total sales'</span><span class="p">)</span> \
+<span class="n">pokemon_types</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">'type_1'</span><span class="p">,</span> <span class="s1">'max(hp)'</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">desc</span><span class="p">(</span><span class="s1">'max(hp)'</span><span class="p">))</span> \
     <span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -1698,13 +1816,28 @@ only showing top 20 rows
 <div class="output_area">
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>+--------------+-----------+----------+
-|      location|total sales|sum(items)|
-+--------------+-----------+----------+
-| United States|  10,667.63|       715|
-|         China|  88,249.00|      5788|
-|United Kingdom|     824.94|        30|
-+--------------+-----------+----------+
+<pre>+--------+-------+
+|  type_1|max(hp)|
++--------+-------+
+|  normal|    255|
+|    dark|    223|
+|  dragon|    216|
+| psychic|    190|
+|   water|    170|
+|   ghost|    150|
+|fighting|    144|
+|   fairy|    126|
+|   grass|    123|
+|    rock|    123|
+|  ground|    115|
+|    fire|    115|
+|     ice|    110|
+|     bug|    107|
+|  poison|    105|
+|   steel|    100|
+|electric|     90|
+|  flying|     85|
++--------+-------+
 
 </pre>
 </div>
@@ -1724,17 +1857,12 @@ only showing top 20 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [16]:</div>
+<div class="prompt input_prompt">In [19]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="k">import</span> <span class="n">date_format</span>
-
-<span class="n">date_sales</span> <span class="o">=</span> <span class="n">sales_data</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="n">sales_data</span><span class="p">[</span><span class="s1">'date'</span><span class="p">])</span>
-
-<span class="n">date_sales</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> \
-    <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">date_format</span><span class="p">(</span><span class="s1">'date'</span><span class="p">,</span> <span class="s1">'EEEE'</span><span class="p">),</span> <span class="n">format_number</span><span class="p">(</span><span class="s1">'sum(total_cost)'</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="s1">'sum(items)'</span><span class="p">)</span> \
-    <span class="o">.</span><span class="n">withColumnRenamed</span><span class="p">(</span><span class="s1">'date_format(date, EEEE)'</span><span class="p">,</span> <span class="s1">'day'</span><span class="p">)</span> \
-    <span class="o">.</span><span class="n">withColumnRenamed</span><span class="p">(</span><span class="s1">'format_number(sum(total_cost), 2)'</span><span class="p">,</span> <span class="s1">'total sales'</span><span class="p">)</span> \
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pokemon_types</span><span class="o">.</span><span class="n">avg</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">'type_1'</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="s1">'avg(attack)'</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s1">'avg attack'</span><span class="p">))</span> \
+    <span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">desc</span><span class="p">(</span><span class="s1">'avg attack'</span><span class="p">))</span> \
     <span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -1745,16 +1873,28 @@ only showing top 20 rows
 <div class="output_area">
 <div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>+---------+-----------+----------+
-|      day|total sales|sum(items)|
-+---------+-----------+----------+
-|  Tuesday|  14,403.24|       993|
-|   Monday|  14,373.44|       986|
-|   Friday|  17,466.03|      1035|
-|Wednesday|  17,747.28|      1162|
-| Saturday|  18,653.82|      1190|
-| Thursday|  17,097.76|      1167|
-+---------+-----------+----------+
+<pre>+--------+----------+
+|  type_1|avg attack|
++--------+----------+
+|  dragon|    108.67|
+|fighting|      99.1|
+|  ground|     96.22|
+|   steel|     93.13|
+|    rock|     89.98|
+|    dark|      84.7|
+|    fire|     84.25|
+|  flying|     78.75|
+|   ghost|      76.3|
+|  normal|     75.86|
+|   grass|     75.15|
+|   water|     74.71|
+|  poison|     73.54|
+|     ice|     73.07|
+| psychic|     72.55|
+|     bug|     72.49|
+|electric|     68.15|
+|   fairy|     61.21|
++--------+----------+
 
 </pre>
 </div>
