@@ -4,5 +4,5 @@ Date: 2018-01-06
 Category: posts
 Tags: python, spark, data, pyspark, dataframes
 author: Craig
-Summary: An overvie of the Spark framework and some examples of Spark Dataframes
+Summary: An overview of the Spark framework with some examples of Spark Dataframes
 header_cover: images/headers/spark.gif
