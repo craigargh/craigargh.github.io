@@ -1,9 +1,0 @@
-Title: Introduction to Spark
-Slug: streaming-with-spark
-Date: 2018-01-29
-Category: posts
-Tags: python, spark, data, pyspark, dataframes
-author: Craig
-Summary: An overview of the Spark framework with some examples of Spark Dataframes
-header_cover: images/headers/spark.gif
-Status: draft

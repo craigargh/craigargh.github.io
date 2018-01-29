@@ -42,7 +42,7 @@ IGNORE_FILES = ['.ipynb_checkpoints']
 THEME = "/home/craig/Documents/workspace/pelican-themes/attila"
 
 STATIC_PATHS = ['images', 'static']
-HEADER_COVER = 'images/headers/header.gif'
+HEADER_COVER = 'images/headers/space_2.gif'
 
 SOCIAL = (('twitter', 'https://twitter.com/craigargh'),
           ('github', 'https://github.com/craigargh'),)
