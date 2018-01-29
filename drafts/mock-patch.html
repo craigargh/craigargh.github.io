@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
 
-  <title>Introduction to Spark</title>
+  <title>Mock Patches</title>
 
 
   <meta name="HandheldFriendly" content="True" />
@@ -42,14 +42,14 @@
 
     <link href="https://craigargh.github.io/drafts/mock-patch.html" rel="canonical" />
 
+        <meta name="description" content="What are mocks? What is patching? IO. Main examples: Requests DB Files input() How to patch with Python Decorator (on methods and...">
 
         <meta name="author" content="Craig">
 
         <meta name="tags" content="python">
-        <meta name="tags" content="spark">
-        <meta name="tags" content="data">
-        <meta name="tags" content="pyspark">
-        <meta name="tags" content="dataframes">
+        <meta name="tags" content="testing">
+        <meta name="tags" content="patch">
+        <meta name="tags" content="mock">
 
         <meta property="og:locale" content="" />
     <meta property="og:site_name" content="Craig's Python Blog" />
@@ -57,23 +57,24 @@
     <meta property="og:title" content="Craig's Python Blog" />
     <meta property="og:description" content="View the blog." />
     <meta property="og:url" content="https://craigargh.github.io" />
-      <meta property="og:image" content="https://craigargh.github.io/images/headers/header.gif" />
+      <meta property="og:image" content="https://craigargh.github.io/images/headers/space_2.gif" />
 
   <meta property="og:type" content="article">
             <meta property="article:author" content="https://craigargh.github.io/author/craig.html">
   <meta property="og:url" content="https://craigargh.github.io/drafts/mock-patch.html">
-  <meta property="og:title" content="Introduction to Spark">
+  <meta property="og:title" content="Mock Patches">
   <meta property="article:published_time" content="2018-01-29 00:00:00+00:00">
+            <meta property="og:description" content="What are mocks? What is patching? IO. Main examples: Requests DB Files input() How to patch with Python Decorator (on methods and...">
 
-            <meta property="og:image" content="https://craigargh.github.io/images/headers/spark.gif">
+            <meta property="og:image" content="https://craigargh.github.io/images/headers/thunderbolt_drums.gif">
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:site" content="@craigargh">
-        <meta name="twitter:title" content="Introduction to Spark">
+        <meta name="twitter:title" content="Mock Patches">
         <meta name="twitter:url" content="https://craigargh.github.io/drafts/mock-patch.html">
 
-            <meta name="twitter:image:src" content="https://craigargh.github.io/images/headers/spark.gif">
+            <meta name="twitter:image:src" content="https://craigargh.github.io/images/headers/thunderbolt_drums.gif">
 
-            <meta name="twitter:description" content="None">
+            <meta name="twitter:description" content="What are mocks? What is patching? IO. Main examples: Requests DB Files input() How to patch with Python Decorator (on methods and...">
 </head>
 <!-- TODO : Body class -->
 <body class="home-template">
@@ -105,7 +106,7 @@
             <a class="menu-button"><i class="ic ic-menu"></i> Menu</a>
           </span>
         </nav>
-        <h1 class="post-title">Introduction to Spark</h1>
+        <h1 class="post-title">Mock Patches</h1>
         <!-- TODO : Proper class for headline -->
         <span class="post-meta">
                 <a href="https://craigargh.github.io/author/craig.html">Craig</a>
@@ -113,7 +114,7 @@
         </span>
         <!-- TODO : Modified check -->
         
-            <div class="post-cover cover" style="background-image: url('images/headers/spark.gif')">
+            <div class="post-cover cover" style="background-image: url('images/headers/thunderbolt_drums.gif')">
         
       </div>
     </header>    
@@ -1098,6 +1099,71 @@ h6:hover .anchor-link {
 
 .ansi-bold { font-weight: bold; }
 </style>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>What are mocks?
+What is patching?</p>
+<ul>
+<li>IO. Main examples:<ul>
+<li>Requests</li>
+<li>DB</li>
+<li>Files</li>
+<li><code>input()</code></li>
+</ul>
+</li>
+</ul>
+<p>How to patch with Python</p>
+<ul>
+<li>Decorator (on methods and classes)<ul>
+<li>With an extra argument in unit test to pass the mock to the body of the test e.g. <code>@patch('') def test_something(self, db_connect_mock): ...</code></li>
+<li>Without an extra arg to define the mock outside of the body of the test e.g. <code>@patch('', MagicMocks) def test_something(self): ...</code></li>
+</ul>
+</li>
+<li>Context manager</li>
+<li>Functions in before and after</li>
+</ul>
+<p>What is the path that I should mock?</p>
+<ul>
+<li>This used to trip me up</li>
+<li>Patch the path for the 3rd party module, OR</li>
+<li>Patch the function/object that was imported by the thing being tested</li>
+</ul>
+<p>Writing clean mocks</p>
+<p>Use attribute chaining instead of defining lots of individual mocks e.g.</p>
+<pre><code>execute_mock = MagicMock()
+
+db_connection_mock.return_value \
+    .cursor.return_value \
+    .execute = execute_mock</code></pre>
+<p>Instead of:</p>
+<pre><code>connection_mock = MagicMock()
+cursor_mock = MagicMock()
+cursor_function_mock = MagicMock()
+connection_mock.cursor = cursor_function_mock
+cursor_function_mock.return_value = cursor_mock
+
+execute_mock = MagicMock()
+connection_mock.commit = commit_mock</code></pre>
+<p>Avoid nesting context managers:</p>
+<pre><code>with patch('whatever') as whatever_mock:
+    with patch('another_thing') as another_thing_mock:
+        with patch('again_something') as again_something_mock:
+            # do some testing here</code></pre>
+<p>Instead:</p>
+<pre><code>with patch('whatever') as whatever_mock, \
+    patch('another_thing') as another_thing_mock, \
+    patch('again_something') as again_something_mock:
+    # Do some testing here</code></pre>
+<p>A better way is to use dependency injection:</p>
+<ul>
+<li>Separate out the IO from the business logic</li>
+<li>Fewer things to patch at once, less patch setup when testing business logic</li>
+</ul>
+</div>
+</div>
+</div>
 
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var mathjaxscript = document.createElement('script');
@@ -1132,7 +1198,7 @@ h6:hover .anchor-link {
 
             <section class="post-info">
                 <div class="post-share">
-                    <a class="twitter" href="https://twitter.com/share?text=Introduction to Spark&amp;url=https://craigargh.github.io/drafts/mock-patch.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <a class="twitter" href="https://twitter.com/share?text=Mock Patches&amp;url=https://craigargh.github.io/drafts/mock-patch.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                     <i class="ic ic-twitter"></i><span class="hidden">Twitter</span>
                     </a>
                     <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://craigargh.github.io/drafts/mock-patch.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
@@ -1145,7 +1211,7 @@ h6:hover .anchor-link {
                 </div>
 
                 <aside class="post-tags">
-<a href="https://craigargh.github.io/tag/python.html">python</a><a href="https://craigargh.github.io/tag/spark.html">spark</a><a href="https://craigargh.github.io/tag/data.html">data</a><a href="https://craigargh.github.io/tag/pyspark.html">pyspark</a><a href="https://craigargh.github.io/tag/dataframes.html">dataframes</a>                </aside>
+<a href="https://craigargh.github.io/tag/python.html">python</a><a href="https://craigargh.github.io/tag/testing.html">testing</a><a href="https://craigargh.github.io/tag/patch.html">patch</a><a href="https://craigargh.github.io/tag/mock.html">mock</a>                </aside>
 
                 <div class="clear"></div>
 
