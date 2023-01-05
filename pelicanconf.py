@@ -1,5 +1,6 @@
 AUTHOR = 'Craig Richardson'
-SITENAME = 'Python Software Engineer'
+SITESUBTITLE = 'Freelance Software Engineer specialising in Python'
+SITENAME = 'goodghost.dev'
 SITEURL = ''
 
 PATH = 'content'
@@ -18,6 +19,9 @@ AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
 
 DISPLAY_PAGES_ON_MENU = True
+
+# Home
+HOME_COLOR = "#000000"
 
 # Blogroll
 LINKS = (('Pelican', 'https://getpelican.com/'),
