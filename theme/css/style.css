@@ -983,12 +983,14 @@ img {
     display: flex;
     align-items: center;
     font-family: 'Fira Sans', sans-serif;
+    margin-bottom: 1rem;
 }
 
 .nav-title {
     font-weight: 600;
-    margin-top: 1.5rem;
+    padding-top: 2rem;
     line-height: 2rem;
+    margin-bottom: 1rem;
 }
 
 .nav-links {
@@ -1000,7 +1002,7 @@ img {
 }
 
 .nav-links li {
-    padding-top: 1.5rem;
+    padding-top: 1rem;
     margin-right: 1.5rem;
     list-style: none;
     list-style-type: none;
