@@ -1,6 +1,6 @@
 AUTHOR = 'Craig Richardson'
 SITESUBTITLE = 'Freelance Software Engineer specialising in Python'
-SITENAME = 'GOODGHOST.DEV'
+SITENAME = 'goodghost.dev'
 SITEURL = ''
 
 PATH = 'content'
