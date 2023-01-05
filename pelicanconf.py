@@ -8,7 +8,7 @@ TIMEZONE = 'Europe/London'
 
 DEFAULT_LANG = 'en'
 
-THEME = 'themes/attila-1.5'
+THEME = 'themes/attila-mod'
 
 # Feed generation is usually not desired when developing
 FEED_ALL_ATOM = None
