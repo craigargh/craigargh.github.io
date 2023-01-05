@@ -870,7 +870,7 @@ img {
 }
 
 .has-cover .blog-name {
-    color: #fff
+    color: #fafafa
 }
 
 .blog-name a {
@@ -894,7 +894,7 @@ img {
 }
 
 .has-cover .blog-description {
-    color: #fff
+    color: #fafafa
 }
 
 #wrapper, #blog-header, #post-header {
@@ -1392,7 +1392,7 @@ img {
 }
 
 .has-cover .post-title {
-    color: #fff
+    color: #fafafa
 }
 
 .post-title a {
@@ -1410,11 +1410,13 @@ img {
     font-size: 0.75em;
     font-weight: 400;
     line-height: 1.333em;
-    opacity: 0.5
+    opacity: 0.5;
+    font-weight: 300;
+    text-transform: uppercase;
 }
 
 .has-cover .post-meta {
-    color: #fff;
+    color: #fafafa;
     opacity: 0.75
 }
 
@@ -1993,6 +1995,7 @@ html {
 body {
   margin: 0; /* 1 */
   line-height: inherit; /* 2 */
+  background-color: #fafafa;
 }
 
 /*
