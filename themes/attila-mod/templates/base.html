@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html lang="{{ DEFAULT_LANG|default('en') }}">
 
+
 <head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Karla&family=Rubik:wght@300;400;700;800&display=swap" rel="stylesheet">
+
   {% block head %}
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
@@ -11,7 +16,7 @@
   <meta name="google-site-verification" content="{{ GOOGLE_SITE_VERIFICATION }}">
   {% endif %}
 
-  <title>{% block title %}{{ SITENAME }}{% if SITESUBTITLE and SHOW_SITESUBTITLE_IN_HTML %} - {{ SITESUBTITLE }}{% endif %}{% endblock title %}</title>
+  <title>{% block title %}{{ AUTHOR }}{% if SITESUBTITLE and SHOW_SITESUBTITLE_IN_HTML %} - {{ SITESUBTITLE }}{% endif %}{% endblock title %}</title>
 
   {% if SITE_DESCRIPTION %}
   <meta name="description" content="{{SITE_DESCRIPTION}}" />
