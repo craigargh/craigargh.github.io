@@ -950,6 +950,7 @@ img {
     padding-top: 2rem;
     line-height: 2rem;
     margin-bottom: 1rem;
+    text-transform: uppercase;
 }
 
 .nav-links {
