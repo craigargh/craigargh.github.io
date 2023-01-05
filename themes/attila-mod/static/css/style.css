@@ -421,7 +421,8 @@ th {
 
 html {
     font-size: 62.5%;
-    overflow-x: hidden
+    overflow-x: hidden;
+    color: #4e5666;
 }
 
 html.menu-active,
@@ -431,7 +432,6 @@ html.menu-active,
 
 body {
     font: 400 2em / 1.5em 'Karla', sans-serif;
-    color: #45484d;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -458,7 +458,7 @@ h5,
 h6 {
     font-family: 'Rubik', sans-serif;
     text-rendering: optimizeLegibility;
-    color: #000
+    color: #4e5666
 }
 
 h1 {
@@ -860,11 +860,9 @@ img {
     margin: 0;
     padding: 0;
     font-family: 'Rubik', sans-serif;
-    font-weight: 800;
     font-size: 2em;
     line-height: 1em;
     text-decoration: none;
-    /*text-transform: uppercase;*/
 }
 
 .home-template .blog-name {
@@ -877,7 +875,7 @@ img {
 
 .blog-name a {
     text-decoration: none;
-    font-weight: inherit;
+    font-weight: 900;
     color: inherit
 }
 
@@ -1390,7 +1388,7 @@ img {
     line-height: 1em;
     font-weight: 800;
     text-indent: -1px;
-    color: #000
+    color: #4e5666
 }
 
 .has-cover .post-title {

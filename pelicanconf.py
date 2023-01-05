@@ -21,7 +21,7 @@ AUTHOR_FEED_RSS = None
 DISPLAY_PAGES_ON_MENU = True
 
 # Home
-HOME_COLOR = "#000000"
+HOME_COVER = "images/snakes.png"
 
 # Blogroll
 LINKS = (('Pelican', 'https://getpelican.com/'),
