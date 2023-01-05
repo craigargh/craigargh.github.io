@@ -61,7 +61,7 @@ abbr[title] {
 
 b,
 strong {
-    font-weight: 700
+    font-weight: 800
 }
 
 dfn {
@@ -206,7 +206,7 @@ textarea {
 }
 
 optgroup {
-    font-weight: 700
+    font-weight: 800
 }
 
 table {
@@ -286,48 +286,6 @@ th {
 
 .ic-menu:before {
     content: '\e80a'
-}
-
-@font-face {
-    font-family: 'Cardo';
-    font-style: normal;
-    font-weight: 400;
-    src: local("Cardo"), local("Cardo-Regular"), url("//fonts.gstatic.com/s/cardo/v8/f9GbO0_LnwwuaRC6yAh0JKCWcynf_cDxXwCLxiixG1c.woff2") format("woff2"), url("//fonts.gstatic.com/s/cardo/v8/c6Zi_ulq7hv-avk-G9Yut6CWcynf_cDxXwCLxiixG1c.woff") format("woff")
-}
-
-@font-face {
-    font-family: 'Cardo';
-    font-style: normal;
-    font-weight: 700;
-    src: local("Cardo Bold"), local("Cardo-Bold"), url("//fonts.gstatic.com/s/cardo/v8/X-1BEHTKpRYzad3JEXy9-nYhjbSpvc47ee6xR_80Hnw.woff2") format("woff2"), url("//fonts.gstatic.com/s/cardo/v8/gHC1KgRPdVNdvvVcxLMCY3YhjbSpvc47ee6xR_80Hnw.woff") format("woff")
-}
-
-@font-face {
-    font-family: 'Cardo';
-    font-style: italic;
-    font-weight: 400;
-    src: local("Cardo Italic"), local("Cardo-Italic"), url("//fonts.gstatic.com/s/cardo/v8/aRpKelDgx13ov6asvC3QbgLUuEpTyoUstqEm5AMlJo4.woff2") format("woff2"), url("//fonts.gstatic.com/s/cardo/v8/mSKSxAIybPTfRoik7xAeTQLUuEpTyoUstqEm5AMlJo4.woff") format("woff")
-}
-
-@font-face {
-    font-family: 'Fira Sans';
-    font-style: normal;
-    font-weight: 400;
-    src: local("Fira Sans"), local("FiraSans-Regular"), url("//fonts.gstatic.com/s/firasans/v5/EjsrzDkQUQCDwsBtLpcVQZBw1xU1rKptJj_0jans920.woff2") format("woff2"), url("//fonts.gstatic.com/s/firasans/v5/EjsrzDkQUQCDwsBtLpcVQbO3LdcAZYWl9Si6vvxL-qU.woff") format("woff")
-}
-
-@font-face {
-    font-family: 'Fira Sans';
-    font-style: normal;
-    font-weight: 500;
-    src: local("Fira Sans Medium"), local("FiraSans-Medium"), url("//fonts.gstatic.com/s/firasans/v5/zM2u8V3CuPVwAAXFQcDi4Bampu5_7CjHW5spxoeN3Vs.woff2") format("woff2"), url("//fonts.gstatic.com/s/firasans/v5/zM2u8V3CuPVwAAXFQcDi4KRDOzjiPcYnFooOUGCOsRk.woff") format("woff")
-}
-
-@font-face {
-    font-family: 'Fira Sans';
-    font-style: normal;
-    font-weight: 700;
-    src: local("Fira Sans Bold"), local("FiraSans-Bold"), url("//fonts.gstatic.com/s/firasans/v5/DugPdSljmOTocZOR2CItOhampu5_7CjHW5spxoeN3Vs.woff2") format("woff2"), url("//fonts.gstatic.com/s/firasans/v5/DugPdSljmOTocZOR2CItOqRDOzjiPcYnFooOUGCOsRk.woff") format("woff")
 }
 
 .hljs {
@@ -472,7 +430,7 @@ html.menu-active,
 }
 
 body {
-    font: 400 2em / 1.5em 'Cardo', serif;
+    font: 400 2em / 1.5em 'Karla', sans-serif;
     color: #45484d;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -498,7 +456,7 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: 'Fira Sans', sans-serif;
+    font-family: 'Rubik', sans-serif;
     text-rendering: optimizeLegibility;
     color: #000
 }
@@ -557,7 +515,7 @@ ol>li:before {
     position: absolute;
     width: 1.5em;
     margin-left: -2em;
-    font-family: 'Fira Sans', sans-serif;
+    font-family: 'Rubik', sans-serif;
     font-size: 1em;
     font-weight: 500;
     line-height: 1.5em;
@@ -628,7 +586,7 @@ i {
 
 strong,
 b {
-    font-weight: 700;
+    font-weight: 800;
     color: #212226
 }
 
@@ -765,7 +723,7 @@ table td {
 }
 
 table th {
-    font-family: 'Fira Sans', sans-serif;
+    font-family: 'Rubik', sans-serif;
     font-weight: 500;
     font-size: 0.75em;
     line-height: 1.25em;
@@ -901,11 +859,12 @@ img {
     z-index: 10;
     margin: 0;
     padding: 0;
-    font-family: 'Fira Sans', sans-serif;
-    font-weight: 700;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 800;
     font-size: 2em;
     line-height: 1em;
-    text-decoration: none
+    text-decoration: none;
+    /*text-transform: uppercase;*/
 }
 
 .home-template .blog-name {
@@ -982,12 +941,12 @@ img {
     justify-content: space-between;
     display: flex;
     align-items: center;
-    font-family: 'Fira Sans', sans-serif;
+    font-family: 'Rubik', sans-serif;
     margin-bottom: 1rem;
 }
 
 .nav-title {
-    font-weight: 600;
+    font-weight: 400;
     padding-top: 2rem;
     line-height: 2rem;
     margin-bottom: 1rem;
@@ -1007,6 +966,11 @@ img {
     list-style: none;
     list-style-type: none;
     list-style-image: none;
+    text-transform: uppercase;
+}
+
+.nav-links li a{
+    font-weight: 300;
 }
 
 .nav-links li::before {
@@ -1034,7 +998,7 @@ img {
     margin-bottom: 1em;
     padding: 0.5em 1.25em;
     border: 1px solid #c2c7cc;
-    font-family: 'Fira Sans', sans-serif;
+    font-family: 'Rubik', sans-serif;
     font-size: 0.75em;
     line-height: 1.666em;
     text-shadow: none;
@@ -1087,7 +1051,7 @@ img {
     border-left: 1px solid #e5e4e1;
     z-index: 400;
     overflow: hidden;
-    font-family: 'Fira Sans', sans-serif;
+    font-family: 'Rubik', sans-serif;
     box-shadow: inset -2px 0 7px rgba(0, 0, 0, 0.1);
     transform: translate3d(16em, 0, 0);
     transition: all ease-out 0.25s
@@ -1254,7 +1218,7 @@ img {
 #footer {
     position: relative;
     z-index: 20;
-    font-family: 'Fira Sans', sans-serif;
+    font-family: 'Rubik', sans-serif;
     line-height: 1em;
     padding-bottom: 6em
 }
@@ -1423,7 +1387,7 @@ img {
     margin: 0 0 0.5em;
     font-size: 2em;
     line-height: 1em;
-    font-weight: 700;
+    font-weight: 800;
     text-indent: -1px;
     color: #000
 }
@@ -1443,7 +1407,7 @@ img {
     z-index: 10;
     display: block;
     margin-bottom: 1.333em;
-    font-family: 'Fira Sans', sans-serif;
+    font-family: 'Rubik', sans-serif;
     font-size: 0.75em;
     font-weight: 400;
     line-height: 1.333em;
@@ -1545,7 +1509,7 @@ img {
 .post-tags {
     max-width: 75%;
     float: left;
-    font-family: 'Fira Sans', sans-serif
+    font-family: 'Rubik', sans-serif
 }
 
 .post-tags a {
@@ -1601,7 +1565,7 @@ img {
 
 .post-author-bio {
     padding-left: 25%;
-    font-family: 'Fira Sans', sans-serif;
+    font-family: 'Rubik', sans-serif;
     font-size: 0.75em;
     line-height: 1.333em
 }
@@ -1659,7 +1623,7 @@ img {
     margin: 0;
     padding: 0.5em 1.25em;
     border: 1px solid #c2c7cc;
-    font-family: 'Fira Sans', sans-serif;
+    font-family: 'Rubik', sans-serif;
     font-size: 0.75em;
     line-height: 1.333em;
     color: #8a9199;
@@ -1769,7 +1733,7 @@ img {
     height: 2em;
     margin: 0;
     padding: 2em 0;
-    font-family: 'Fira Sans', sans-serif
+    font-family: 'Rubik', sans-serif
 }
 
 .pagination:after {
