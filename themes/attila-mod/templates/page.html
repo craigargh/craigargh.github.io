@@ -42,17 +42,6 @@
     <!-- Set your background image for this header on the line below. -->
     <header id="post-header" {% if selected_cover or selected_color %}class="has-cover"{% endif %}>
       <div class="inner">
-        <nav id="navigation">
-          {% if SITE_LOGO %}
-            <span class="blog-logo">
-                <a href="{{ SITEURL }}/"><img src="{{SITE_LOGO}}" alt="Blog Logo" /></a>
-            </span>
-          {% else %}
-            <span id="home-button" class="nav-button">
-                <a class="home-button" href="{{ SITEURL }}/" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
-            </span>
-          {% endif %}
-        </nav>
         <h1 class="post-title">{{ page.title }}</h1>
         {% if selected_cover %}
             <div class="post-cover cover" style="background-image: url('{{ selected_cover }}')">
