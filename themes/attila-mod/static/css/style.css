@@ -973,6 +973,10 @@ img {
     padding: 0 2em
 }
 
+.nav-bar {
+    display: flex;
+}
+
 .nav-button {
     position: fixed;
     top: 0;
